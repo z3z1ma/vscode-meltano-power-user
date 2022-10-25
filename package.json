@@ -1,0 +1,99 @@
+{
+  "name": "meltano-power-user",
+  "displayName": "Meltano Power User",
+  "description": "Conveniences and helpers that make developing data pipelines with Meltano delightful",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.71.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "workspaceContains:**/meltano.{yml,yaml}"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "meltanoView",
+          "title": "Meltano Power User",
+          "icon": "./media/assets/meltano-melty.png",
+          "contextualTitle": "Meltano Power User"
+        }
+      ],
+      "panel": [
+        {
+          "id": "meltanoHub",
+          "title": "Meltano",
+          "icon": "./media/assets/meltano-melty.png"
+        }
+      ]
+    },
+    "views": {
+      "meltanoView": [
+        {
+          "id": "extractor_treeview",
+          "name": "Meltano Extractors"
+        },
+        {
+          "id": "loader_treeview",
+          "name": "Meltano Loaders"
+        },
+        {
+          "id": "utility_treeview",
+          "name": "Meltano Utilities"
+        },
+        {
+          "id": "orchestrator_treeview",
+          "name": "Meltano Orchestrators"
+        },
+        {
+          "id": "transformer_treeview",
+          "name": "Meltano Transformers"
+        }
+      ],
+      "meltanoHub": [
+        {
+          "id": "meltano_hub",
+          "name": "Hub",
+          "type": "webview"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.71.0",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "@vscode/test-electron": "^2.1.5",
+    "eslint": "^8.20.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.0.0",
+    "ts-loader": "^9.3.1",
+    "typescript": "^4.7.4",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "dependencies": {
+    "inversify": "^6.0.1",
+    "inversify-binding-decorators": "^4.0.0",
+    "node-fetch": "^3.2.10",
+    "reflect-metadata": "^0.1.13"
+  }
+}

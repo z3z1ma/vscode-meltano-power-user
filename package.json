@@ -2,7 +2,7 @@
   "name": "meltano-power-user",
   "displayName": "Meltano Power User",
   "description": "Conveniences and helpers that make developing data pipelines with Meltano delightful",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.71.0"
   },
@@ -52,13 +52,33 @@
         {
           "id": "transformer_treeview",
           "name": "Meltano Transformers"
+        },
+        {
+          "id": "file_treeview",
+          "name": "Meltano File Bundles"
         }
       ],
       "meltanoHub": [
         {
-          "id": "meltano_hub",
+          "id": "meltanoPowerUser.meltanoHub",
           "name": "Hub",
           "type": "webview"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "meltanoPowerUser.addPlugin",
+        "title": "Meltano: Add Plugin",
+        "icon": "$(plus)"
+      }
+    ],
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "meltanoPowerUser.addPlugin",
+          "when": "view in meltanoPowerUser.treeViews && viewItem == variant",
+          "group": "inline"
         }
       ]
     }

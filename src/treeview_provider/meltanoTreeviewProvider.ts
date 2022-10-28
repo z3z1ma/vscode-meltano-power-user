@@ -32,19 +32,21 @@ ${plugin.description ?? 'No description provided'}
 ${plugin.repo}`);
 }
 
-class MeltanoTreeItem extends TreeItem {
+export class MeltanoTreeItem extends TreeItem {
   plugin: Plugin;
+  typ?: PluginType;
 
   constructor(plugin: Plugin, isVariant: boolean = false) {
     super(plugin.variant);
     this.plugin = plugin;
     if (plugin.url !== undefined) {
       if (isVariant) {
+        this.contextValue = "variant";
         this.collapsibleState = TreeItemCollapsibleState.None;
         this.description = plugin.description;
         this.tooltip = makeTooltip(plugin);
         this.command = {
-          command: "vscode.open",
+          command: "meltanoPowerUser.openPluginInWebview",
           title: "Open in Meltano Hub",
           arguments: [Uri.parse(plugin.url)],
         };
@@ -52,6 +54,7 @@ class MeltanoTreeItem extends TreeItem {
           this.label += " ⭐️";
         }
       } else {
+        this.contextValue = "base";
         this.collapsibleState = TreeItemCollapsibleState.Collapsed;
         this.iconPath = Uri.parse(plugin.url);
       }
@@ -60,23 +63,27 @@ class MeltanoTreeItem extends TreeItem {
 }
 
 class ExtractorTreeItem extends MeltanoTreeItem {
-  contextValue = PluginType.extractor;
+  typ = PluginType.extractor;
 }
 
 class LoaderTreeItem extends MeltanoTreeItem {
-  contextValue = PluginType.loader;
+  typ = PluginType.loader;
 }
 
 class UtilityTreeItem extends MeltanoTreeItem {
-  contextValue = PluginType.utility;
+  typ = PluginType.utility;
 }
 
 class TransformerTreeItem extends MeltanoTreeItem {
-  contextValue = PluginType.transformer;
+  typ = PluginType.transformer;
 }
 
 class OrchestratorTreeItem extends MeltanoTreeItem {
-  contextValue = PluginType.orchestrator;
+  typ = PluginType.orchestrator;
+}
+
+class FilesTreeItem extends MeltanoTreeItem {
+  typ = PluginType.files;
 }
 
 const treeItemMap = {
@@ -84,7 +91,8 @@ const treeItemMap = {
   [PluginType.loader]: LoaderTreeItem,
   [PluginType.utility]: UtilityTreeItem,
   [PluginType.transformer]: TransformerTreeItem,
-  [PluginType.orchestrator]: OrchestratorTreeItem
+  [PluginType.orchestrator]: OrchestratorTreeItem,
+  [PluginType.files]: FilesTreeItem
 };
 
 @provide(MeltanoTreeviewProvider)
@@ -156,7 +164,7 @@ abstract class MeltanoTreeviewProvider implements TreeDataProvider<MeltanoTreeIt
         treeItems.push(new treeItemMap[this.treeType](parsedPlugin));
       }
     }
-    return treeItems;
+    return treeItems.reverse();
   }
 }
 
@@ -192,5 +200,12 @@ export class TransformerTreeView extends MeltanoTreeviewProvider {
 export class OrchestratorTreeView extends MeltanoTreeviewProvider {
   constructor() {
     super(PluginType.orchestrator);
+  }
+}
+
+@provideSingleton(FilesTreeView)
+export class FilesTreeView extends MeltanoTreeviewProvider {
+  constructor() {
+    super(PluginType.files);
   }
 }

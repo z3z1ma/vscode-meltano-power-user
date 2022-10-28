@@ -14,12 +14,11 @@ import {
     workspace
 } from "vscode";
 
-import { readFileSync } from "fs";
 import { provideSingleton } from "../utils";
 
 @provideSingleton(MeltanoHubPanel)
 export class MeltanoHubPanel implements WebviewViewProvider {
-    public static readonly viewType = 'meltano_hub';
+    public static readonly viewType = 'meltanoPowerUser.meltanoHub';
 
     private _disposables: Disposable[] = [];
     private _panel: WebviewView | undefined;
@@ -56,7 +55,6 @@ export class MeltanoHubPanel implements WebviewViewProvider {
 
     /** Renders webview content */
     private async renderWebviewView(context: WebviewViewResolveContext) {
-        const webview = this._panel!.webview;
         this._panel!.webview.html = `
         <!DOCTYPE html>
         <html lang="en">
@@ -64,34 +62,34 @@ export class MeltanoHubPanel implements WebviewViewProvider {
           <meta charset="utf-8">
           <meta name="viewport"
              content="width=device-width, initial-scale=1">
+          <script>
+          // const vscode = acquireVsCodeApi();
+          window.addEventListener('message', (event) => {
+            switch (event.data.command) {
+                case 'openPage':
+                    if (document.getElementById('m-frame').src !== event.data.url) {
+                        document.getElementById('m-frame').src = event.data.url;
+                    }
+                    break;
+            }
+          });
+          </script>
         </head>
         <body>
-          <iframe src="https://hub.meltano.com/" style="height: 100vh; width: 100%; border: none" />
+          <iframe id="m-frame" src="https://hub.meltano.com/" style="height: 100vh; width: 100%; border: none" />
         </body>
         </html>`;
     }
 
     /** Sends query result data to webview */
-    private async openPage(
-        url: string,
+    async openPage(
+        url: Uri,
     ) {
         await this._panel!.webview.postMessage({
             command: "openPage",
+            url: url.toString()
         });
     }
-}
-
-/** Gets webview HTML */
-function getHtml(webview: Webview, extensionUri: Uri) {
-    let indexPath = getUri(webview, extensionUri, ['query_panel', 'index.html']);
-    let resourceDir = getUri(webview, extensionUri, ['query_panel']);
-    let theme = [ColorThemeKind.Light, ColorThemeKind.HighContrastLight].includes(window.activeColorTheme.kind)
-        ? "light" : "dark";
-    return readFileSync(indexPath.path).toString()
-        .replace(/__ROOT__/g, resourceDir.toString())
-        .replace(/__THEME__/g, theme)
-        .replace(/__NONCE__/g, getNonce())
-        .replace(/__CSPSOURCE__/g, webview.cspSource);
 }
 
 /** Used to enforce a secure CSP */

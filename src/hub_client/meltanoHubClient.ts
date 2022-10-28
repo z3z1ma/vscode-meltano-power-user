@@ -8,7 +8,8 @@ import {
     PluginType,
     UtilityResponse,
     TransformerResponse,
-    OrchestratorResponse
+    OrchestratorResponse,
+    FilesResponse
 } from '../domain';
 
 /**  Base URL for Meltano Hub */
@@ -28,6 +29,7 @@ async function getPluginData(type: PluginType, name: string, variant: string): P
         case PluginType.utility: return meltanoFetch<UtilityResponse>(endpoint);
         case PluginType.transformer: return meltanoFetch<TransformerResponse>(endpoint);
         case PluginType.orchestrator: return meltanoFetch<OrchestratorResponse>(endpoint);
+        case PluginType.files: return meltanoFetch<FilesResponse>(endpoint);
     }
 }
 

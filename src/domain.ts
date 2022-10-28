@@ -56,13 +56,19 @@ interface OrchestratorResponse extends BasePluginResponse {
     type: PluginType.orchestrator
 }
 
+/** Meltano Hub API orchestrator plugin response */
+interface FilesResponse extends BasePluginResponse {
+    type: PluginType.files
+}
+
 /** Meltano Hub API generic plugin response */
 type PluginResponse =
     | ExtractorResponse
     | LoaderResponse
     | UtilityResponse
     | TransformerResponse
-    | OrchestratorResponse;
+    | OrchestratorResponse
+    | FilesResponse;
 
 /** This enum defines all supported Meltano plugin types */
 enum PluginType {
@@ -70,7 +76,8 @@ enum PluginType {
     loader = "loaders",
     utility = "utilities",
     transformer = "transformers",
-    orchestrator = "orchestrators"
+    orchestrator = "orchestrators",
+    files = "files",
 }
 
 /** Data structure used to construct a {@link Plugin} object */
@@ -163,12 +170,22 @@ class Orchestrator extends Plugin {
     }
 }
 
+interface FilesData extends PluginData {}
+
+class Files extends Plugin {
+    type = PluginType.files;
+    constructor(args: FilesData) {
+        super(args);
+    }
+}
+
 const pluginTypeMap = {
     [PluginType.extractor]: Extractor,
     [PluginType.loader]: Loader,
     [PluginType.utility]: Utility,
     [PluginType.transformer]: Transformer,
-    [PluginType.orchestrator]: Orchestrator
+    [PluginType.orchestrator]: Orchestrator,
+    [PluginType.files]: Files
 };
 
 export {
@@ -179,6 +196,7 @@ export {
     UtilityResponse,
     TransformerResponse,
     OrchestratorResponse,
+    FilesResponse,
     pluginTypeMap,
     Plugin,
     Extractor,
@@ -186,5 +204,6 @@ export {
     Utility,
     Transformer,
     Orchestrator,
+    Files,
     PluginType,
 };

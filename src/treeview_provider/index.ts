@@ -1,6 +1,6 @@
 import { Disposable, window } from "vscode";
 import { provideSingleton } from "../utils";
-import { ExtractorTreeView, LoaderTreeView, UtilityTreeView, TransformerTreeView, OrchestratorTreeView } from "./meltanoTreeviewProvider";
+import { ExtractorTreeView, LoaderTreeView, UtilityTreeView, TransformerTreeView, OrchestratorTreeView, FilesTreeView } from "./meltanoTreeviewProvider";
 
 @provideSingleton(TreeviewProviders)
 export class TreeviewProviders implements Disposable {
@@ -12,6 +12,7 @@ export class TreeviewProviders implements Disposable {
     private utilityTreeView: UtilityTreeView,
     private transformerTreeView: TransformerTreeView,
     private orchestratorTreeView: OrchestratorTreeView,
+    private filesTreeView: FilesTreeView,
   ) {
     this.disposables.push(
       window.registerTreeDataProvider(
@@ -33,6 +34,10 @@ export class TreeviewProviders implements Disposable {
       window.registerTreeDataProvider(
         "transformer_treeview",
         this.transformerTreeView
+      ),
+      window.registerTreeDataProvider(
+        "file_treeview",
+        this.filesTreeView
       ),
     );
   }

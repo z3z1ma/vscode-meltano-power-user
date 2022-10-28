@@ -1,6 +1,11 @@
 {
   "name": "meltano-power-user",
   "displayName": "Meltano Power User",
+  "author": {
+    "name": "Alex Butler",
+    "url": "https://github.com/z3z1ma"
+  },
+  "publisher": "z3z1ma",
   "description": "Conveniences and helpers that make developing data pipelines with Meltano delightful",
   "version": "0.1.0",
   "engines": {
@@ -16,7 +21,7 @@
   "repository": {
     "url": "https://github.com/z3z1ma/vscode-meltano-power-user"
   },
-  "icon": "./media/assets/meltano-melty.png",
+  "icon": "media/assets/meltano-melty.png",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
